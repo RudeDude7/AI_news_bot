@@ -1,6 +1,8 @@
 import urllib.request
 import xml.etree.ElementTree as ET
 import ssl
+import json
+import os
 
 def fetch_ai_news():
     # 1. Define the Google News RSS URL
@@ -21,12 +23,19 @@ def fetch_ai_news():
         # Find all 'item' elements in the RSS feed
         items = root.findall('.//item')
         
-        # 5. Print ONLY the top 5 news items
+        # 5. Format the top 5 news items as a list of dictionaries
+        news_data = []
         for item in items[:5]:
             title = item.find('title').text
             link = item.find('link').text
-            print(f"Title: {title}")
-            print(f"Link: {link}\n")
+            news_data.append({"title": title, "link": link})
+            
+        # 6. Ensure 'data' directory exists and save to JSON
+        os.makedirs("data", exist_ok=True)
+        with open("data/news.json", "w", encoding="utf-8") as f:
+            json.dump(news_data, f, indent=4)
+            
+        print("Successfully saved top 5 AI news to data/news.json")
             
     except Exception as e:
         print(f"An error occurred: {e}")
