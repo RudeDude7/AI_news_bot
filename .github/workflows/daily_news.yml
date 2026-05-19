@@ -40,3 +40,5 @@ jobs:
             git commit -m "chore: update daily news data"
             git push
           fi
+
+          
